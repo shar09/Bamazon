@@ -19,6 +19,7 @@ function display() {
     if (error) throw error;
     for(var i = 0; i < response.length; i++) {
         console.log("Item Id: " + response[i].item_id + " | Product Name: " + response[i].product_name + " | Category: " + response[i].department_name + " | Price: " + response[i].price + " | Stock Left: " + response[i].stock_quantity);
+        console.log("\n");
     }
     start();
    });
