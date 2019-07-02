@@ -1,5 +1,5 @@
 var mysql = require("mysql");
-//var inquirer = require("inquirer");
+var inquirer = require("inquirer");
 
 var connection = mysql.createConnection({
     host: "localhost",
@@ -15,11 +15,49 @@ connection.connect(function(error) {
 });
 
 function display() {
-    connection.query("SELECT * from products", function(error, response){
+    connection.query("SELECT * FROM products", function(error, response){
     if (error) throw error;
     for(var i = 0; i < response.length; i++) {
         console.log(response[i].item_id + " | " + response[i].product_name + " | " + response[i].department_name + " | " + response[i].price + " | " + response[i].stock_quantity);
     }
-    connection.end();  
+    start();
    });
 }
+
+function start() {
+    inquirer
+      .prompt([
+        {
+            name: "itemselect",
+            type: "input",
+            message: "Please type in the id of the product that you would like to buy.",
+            validate: function(value) {
+                if (isNaN(value) === false) {
+                    return true;
+                }
+                    return false;
+            }
+        },
+        {
+            name: "quantity",
+            type: "input",
+            message: "How many of these items would you like to buy?",
+            validate: function(value) {
+                if (isNaN(value) === false) {
+                  return true;
+                }
+                return false;
+            }
+        }
+      ])
+      .then(function(answer) {
+        var query = "SELECT * FROM products WHERE ?";  
+        connection.query(query, { item_id: answer.itemselect }, function(error, response){
+            if (error) throw error;
+            console.log(response);
+            console.log("You have selected: " +answer.quantity+ " " +response[0].product_name);
+        })
+        connection.end();  
+      });
+}
+
