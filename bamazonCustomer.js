@@ -20,6 +20,7 @@ function display() {
     for(var i = 0; i < response.length; i++) {
         console.log(response[i].item_id + " | " + response[i].product_name + " | " + response[i].department_name + " | " + response[i].price + " | " + response[i].stock_quantity);
     }
+    // console.log("Item id:" + response[i].item_id + " | " + response[i].product_name + " | " + response[i].department_name + " | " + response[i].price + " | " + response[i].stock_quantity);
     start();
    });
 }
@@ -56,8 +57,30 @@ function start() {
             if (error) throw error;
             console.log(response);
             console.log("You have selected: " +answer.quantity+ " " +response[0].product_name);
+            if(parseInt(answer.quantity) > parseInt(response[0].stock_quantity))
+            {
+                console.log("Insufficient Quantity");
+            }
+            else {
+                quantityleft = parseInt(response[0].stock_quantity) - parseInt(answer.quantity);
+                var query = "UPDATE products SET ? WHERE ?";
+                connection.query(query, 
+                [    
+                    {
+                        stock_quantity: quantityleft
+                    },
+                    {
+                        item_id: answer.itemselect
+                    }
+                ], function(error, result) {
+                    if (error) throw error;
+                    console.log(result);
+                }
+                )
+                console.log("Total Cost Of Purchase: " +parseInt(answer.quantity) * parseInt(response[0].price));
+                connection.end();  
+            }
         })
-        connection.end();  
-      });
+    });
 }
 

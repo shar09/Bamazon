@@ -7,7 +7,7 @@ item_id INTEGER(10) NOT NULL,
 product_name VARCHAR(20) NOT NULL,
 department_name VARCHAR(20) NOT NULL,
 price VARCHAR(10) NOT NULL,
-stock_quantity INTEGER(10) NOT NULL,
+stock_quantity VARCHAR(10) NOT NULL,
 PRIMARY KEY(item_id)
 );
 
